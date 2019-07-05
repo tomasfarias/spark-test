@@ -1,4 +1,5 @@
 import pytest
+from pyspark.sql import Row
 from pyspark.sql.types import IntegerType
 from pyspark.sql.types import StructType
 from pyspark.sql.types import StructField
@@ -9,6 +10,7 @@ from spark_test.helpers import create_dataframe
 from spark_test.testing import assert_rdd_equal
 from spark_test.testing import assert_dataframe_equal
 from spark_test.testing import assert_schema_equal
+from spark_test.testing import assert_row_equal
 
 
 def test_assert_schema_equal(spark):
@@ -120,3 +122,21 @@ def test_assert_frame_equal(spark):
         assert_dataframe_equal(expected, result)
 
     assert_dataframe_equal(expected, result, check_order=False)
+
+
+def test_assert_row_equal():
+
+    left = Row(Name='Tom', Pet='Cat', Age=25, Status=1.0)
+    right = Row(Name='Tom', Pet='Cat', Age=25, Status=1.0)
+
+    assert_row_equal(left, right)
+
+    right = Row(Name='Tom', Pet='Cat', Age=24, Status=1.0)
+
+    with pytest.raises(AssertionError):
+        assert_row_equal(left, right)
+
+    right = Row(Name='Tom', Age=25, Status=1.0)
+
+    with pytest.raises(AssertionError):
+        assert_row_equal(left, right)

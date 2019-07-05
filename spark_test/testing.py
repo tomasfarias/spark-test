@@ -4,7 +4,7 @@ from typing import Mapping, Collection, Union
 import pyspark
 from pyspark.rdd import RDD
 from pyspark.sql.types import StructType
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame, SparkSession, Row
 
 from spark_test.helpers import create_dataframe
 
@@ -79,9 +79,79 @@ def assert_dataframe_equal(
 
     # row comparison
     if check_order is True:
-        assert expected_rows == result_rows
+        for left_row, right_row in zip(expected_rows, result_rows):
+            assert_row_equal(left_row, right_row)
     else:
-        assert Counter(expected_rows) == Counter(result_rows)
+        expected_count = Counter(expected_rows)
+        result_count = Counter(result_rows)
+
+        left_keys_sorted = sorted(expected_count.keys())
+        right_keys_sorted = sorted(result_count.keys())
+
+        for left_row, right_row in zip(left_keys_sorted, right_keys_sorted):
+            assert_row_equal(left_row, right_row)
+
+            msg = (
+                '{left_row} appears a different amount of times:\n'
+                'Left: appears {left_count} times\n'
+                'Right: appears {right_count} times'
+            )
+            assert expected_count[left_row] == result_count[right_row], msg.format(
+                left_row=left_row, left_count=expected_count[left_row],
+                right_count=result_count[right_row]
+            )
+
+
+def assert_row_equal(left: Row, right: Row, check_field_order: bool = True):
+    """
+    Comparte two lists of pyspark.sql.Row
+
+    :param left: A Row to compare.
+    :param right: Another Row to compare.
+    :check_order: Compare the order of rows or ignore it.
+    """
+
+    left_d = left.asDict()
+    right_d = right.asDict()
+
+    # fields comparison
+    if not left_d.keys() == right_d.keys():
+        # Something's not right, check which set is different
+        extra_l = left_d.keys() - right_d.keys()
+        extra_r = right_d.keys() - left_d.keys()
+
+        if extra_l is not set() and extra_r is not set():
+            msg = (
+                'Both rows contain extra elements:\n'
+                'Left={l_fields}\n'
+                'Right={r_fields}'
+            )
+            raise(AssertionError(msg.format(l_fields=extra_l, r_fields=extra_r)))
+
+        elif extra_l is not set() and extra_r is set():
+            msg = (
+                'Left row contains extra elements:{l_fields}'
+            )
+            raise(AssertionError(msg.format(l_fields=extra_l)))
+
+        else:
+            msg = (
+                'Right row contains extra elements:{r_fields}'
+            )
+            raise(AssertionError(msg.format(r_fields=extra_r)))
+
+    # values comparison
+    msg = (
+        'Values for {field} do not match:\n'
+        'Left={l_value}\n'
+        'Right={r_value}'
+    )
+
+    for key in left_d.keys():
+
+        assert left_d[key] == right_d[key], msg.format(
+            field=key, l_value=left_d[key], r_value=right_d[key]
+        )
 
 
 def assert_schema_equal(left: StructType, right: StructType):
@@ -106,7 +176,7 @@ def assert_schema_equal(left: StructType, right: StructType):
 
     for l_field, r_field in zip(left, right):
 
-        assert l_field.name is r_field.name, msg.format(
+        assert l_field.name == r_field.name, msg.format(
             attr='name', l_val=l_field.name, r_val=r_field.name
         )
 
