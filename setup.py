@@ -11,14 +11,18 @@ setup(
     version='0.1',
     author='Tomas Farias',
     author_email='tomasfariassantana@gmail.com',
-    description='A collection of assertion functions to test Spark Collections like DataFrames.',
+    description='Assertion functions to test Spark Collections like DataFrames.',
     long_description=readme(),
     packages=find_packages(exclude=['tests', 'docs']),
     license='MIT',
     url='https://github.com/tomasfarias/spark-test',
+    install_requires=[
+        'pyspark'
+    ],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
+        'Intended Audience :: Developers',
         'Topic :: Software Development :: Testing',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.7',
