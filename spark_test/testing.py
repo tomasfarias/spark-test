@@ -84,7 +84,7 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'On row {idx}: {e}')  # Adds row index to message
+                raise AssertionError(f'{e}, on row {idx}')  # Adds row index to message
 
     else:
         expected_count = Counter(expected_rows)
@@ -98,7 +98,7 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'On row {idx}: {e}')  # Adds row index to message
+                raise AssertionError(f'{e}, on row {idx}')  # Adds row index to message
 
             msg = (
                 '{left_row} appears a different amount of times:\n'
@@ -131,7 +131,7 @@ def assert_row_equal(left: Row, right: Row, check_field_order: bool = True):
 
         if extra_l is not set() and extra_r is not set():
             msg = (
-                'Both rows contain extra elements:\n'
+                'Both rows contain extra elements\n'
                 'Left={l_fields}\n'
                 'Right={r_fields}'
             )
@@ -139,19 +139,19 @@ def assert_row_equal(left: Row, right: Row, check_field_order: bool = True):
 
         elif extra_l is not set() and extra_r is set():
             msg = (
-                'Left row contains extra elements:{l_fields}'
+                'Left row contains extra elements{l_fields}'
             )
             raise(AssertionError(msg.format(l_fields=extra_l)))
 
         else:
             msg = (
-                'Right row contains extra elements:{r_fields}'
+                'Right row contains extra elements{r_fields}'
             )
             raise(AssertionError(msg.format(r_fields=extra_r)))
 
     # values comparison
     msg = (
-        'Values for {field} do not match:\n'
+        'Values for {field} do not match\n'
         'Left={l_value}\n'
         'Right={r_value}'
     )
@@ -178,7 +178,7 @@ def assert_schema_equal(left: StructType, right: StructType):
 
     # fields comparison
     msg = (
-        'Difference in field comparison:\n'
+        'Difference in field comparison\n'
         'Left {attr} = {l_val}\n'
         'Right {attr} = {r_val}'
     )
