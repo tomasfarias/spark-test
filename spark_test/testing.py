@@ -79,8 +79,13 @@ def assert_dataframe_equal(
 
     # row comparison
     if check_order is True:
-        for left_row, right_row in zip(expected_rows, result_rows):
-            assert_row_equal(left_row, right_row)
+        for idx, (left_row, right_row) in enumerate(zip(expected_rows, result_rows)):
+
+            try:
+                assert_row_equal(left_row, right_row)
+            except AssertionError as e:
+                raise AssertionError(f'On row {idx}: {e}')  # Adds row index to message
+
     else:
         expected_count = Counter(expected_rows)
         result_count = Counter(result_rows)
@@ -88,8 +93,12 @@ def assert_dataframe_equal(
         left_keys_sorted = sorted(expected_count.keys())
         right_keys_sorted = sorted(result_count.keys())
 
-        for left_row, right_row in zip(left_keys_sorted, right_keys_sorted):
-            assert_row_equal(left_row, right_row)
+        for idx, (left_row, right_row) in enumerate(zip(left_keys_sorted, right_keys_sorted)):
+
+            try:
+                assert_row_equal(left_row, right_row)
+            except AssertionError as e:
+                raise AssertionError(f'On row {idx}: {e}')  # Adds row index to message
 
             msg = (
                 '{left_row} appears a different amount of times:\n'
