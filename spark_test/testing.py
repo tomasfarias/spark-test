@@ -84,7 +84,7 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'{e}, on row {idx}')  # Adds row index to message
+                raise AssertionError(f'{e}, on row {idx}').with_traceback(e.__traceback__)
 
     else:
         expected_count = Counter(expected_rows)
@@ -98,7 +98,7 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'{e}, on row {idx}')  # Adds row index to message
+                raise AssertionError(f'{e}, on row {idx}').with_traceback(e.__traceback__)
 
             msg = (
                 '{left_row} appears a different amount of times:\n'
