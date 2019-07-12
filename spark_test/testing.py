@@ -182,30 +182,34 @@ def assert_schema_equal(left: StructType, right: StructType):
 
     # fields comparison
     msg = (
-        'Difference in schema field comparison\n'
-        ' +  where left {attr} = {l_val}\n'
-        ' +  where right {attr} = {r_val}'
+        'Difference in schema when comparing fields\n'
+        " +  where {l_name}'s {attr} = {l_val}\n"
+        " +  where {r_name}'s {attr} = {r_val}"
     )
 
     for l_field, r_field in zip(left, right):
 
         assert l_field.name == r_field.name, msg.format(
-            attr='name', l_val=l_field.name, r_val=r_field.name
+            attr='name', l_name=l_field.name, l_val=l_field.name,
+            r_val=r_field.name, r_name=r_field.name
         )
 
         assert l_field.dataType == r_field.dataType, msg.format(
-            attr='dataType', l_val=l_field.dataType, r_val=r_field.dataType
+            attr='dataType', l_name=l_field.name, l_val=l_field.dataType,
+            r_val=r_field.dataType, r_name=r_field.name
         )
 
         assert l_field.nullable is r_field.nullable, msg.format(
-            attr='nullable', l_val=l_field.nullable, r_val=r_field.nullable
+            attr='nullable', l_name=l_field.name, l_val=l_field.nullable,
+            r_val=r_field.nullable, r_name=r_field.name
         )
 
         assert l_field.metadata == r_field.metadata, msg.format(
-            attr='metadata', l_val=l_field.metadata, r_val=r_field.metadata
+            attr='metadata', l_name=l_field.name, l_val=l_field.metadata,
+            r_val=r_field.metadata, r_name=r_field.name
         )
 
         assert l_field.needConversion() == r_field.needConversion(), msg.format(
-            attr='needConversion', l_val=l_field.needConversion(),
-            r_val=r_field.needConversion()
+            attr='needConversion', l_name=l_field.name, l_val=l_field.needConversion(),
+            r_val=r_field.needConversion(), r_name=r_field.name
         )

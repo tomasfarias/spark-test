@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='spark-test',
-    version='0.2.2',
+    version='0.2.3',
     author='Tomas Farias',
     author_email='tomasfariassantana@gmail.com',
     description='Assertion functions to test Spark Collections like DataFrames.',
