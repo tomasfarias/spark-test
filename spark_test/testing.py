@@ -61,7 +61,11 @@ def assert_dataframe_equal(
     result_rows = result.collect()
 
     # length comparison
-    msg = f'Different length. Left={len(result_rows)}, right={len(expected_rows)}'
+    msg = (
+        'Different length\n'
+        f' +  where left={len(result_rows)}\n'
+        f' +  where right={len(expected_rows)}'
+    )
     assert len(expected_rows) is len(result_rows), msg
 
     # schema comparison
@@ -84,7 +88,7 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'{e}, on row {idx}').with_traceback(e.__traceback__)
+                raise AssertionError(f'On row {idx}. {e}').with_traceback(e.__traceback__)
 
     else:
         expected_count = Counter(expected_rows)
@@ -98,12 +102,12 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'{e}, on row {idx}').with_traceback(e.__traceback__)
+                raise AssertionError(f'On row {idx}. {e}').with_traceback(e.__traceback__)
 
             msg = (
                 '{left_row} appears a different amount of times:\n'
-                'Left: appears {left_count} times\n'
-                'Right: appears {right_count} times'
+                ' +  where left appears {left_count} times\n'
+                ' +  where Right: appears {right_count} times'
             )
             assert expected_count[left_row] == result_count[right_row], msg.format(
                 left_row=left_row, left_count=expected_count[left_row],
@@ -132,28 +136,28 @@ def assert_row_equal(left: Row, right: Row, check_field_order: bool = True):
         if extra_l is not set() and extra_r is not set():
             msg = (
                 'Both rows contain extra elements\n'
-                'Left={l_fields}\n'
-                'Right={r_fields}'
+                ' +  where left={l_fields}\n'
+                ' +  where right={r_fields}'
             )
             raise(AssertionError(msg.format(l_fields=extra_l, r_fields=extra_r)))
 
         elif extra_l is not set() and extra_r is set():
             msg = (
-                'Left row contains extra elements{l_fields}'
+                'Left row contains extra elements: {l_fields}'
             )
             raise(AssertionError(msg.format(l_fields=extra_l)))
 
         else:
             msg = (
-                'Right row contains extra elements{r_fields}'
+                'Right row contains extra elements: {r_fields}'
             )
             raise(AssertionError(msg.format(r_fields=extra_r)))
 
     # values comparison
     msg = (
         'Values for {field} do not match\n'
-        'Left={l_value}\n'
-        'Right={r_value}'
+        ' +  where left={l_value}\n'
+        ' +  where right={r_value}'
     )
 
     for key in left_d.keys():
@@ -178,9 +182,9 @@ def assert_schema_equal(left: StructType, right: StructType):
 
     # fields comparison
     msg = (
-        'Difference in field comparison\n'
-        'Left {attr} = {l_val}\n'
-        'Right {attr} = {r_val}'
+        'Difference in schema field comparison\n'
+        ' +  where left {attr} = {l_val}\n'
+        ' +  where right {attr} = {r_val}'
     )
 
     for l_field, r_field in zip(left, right):
