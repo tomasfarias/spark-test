@@ -5,8 +5,9 @@ from pyspark.sql.types import StructField
 from pyspark.sql.types import StructType
 from pyspark.sql.types import StringType
 
-from spark_test.helpers import create_dataframe
 from spark_test.testing import assert_dataframe_equal
+from spark_test.helpers import create_dataframe
+from spark_test.helpers import is_empty
 
 
 def test_create_dataframe(spark):
@@ -35,3 +36,13 @@ def test_create_dataframe(spark):
 
     with pytest.raises(TypeError):
         result = create_dataframe(1)
+
+
+def test_is_empty(spark):
+    empty_df = spark.createDataFrame([()])
+
+    assert is_empty(empty_df) is True
+
+    not_empty_df = spark.createDataFrame([(1, )], schema=['Test'])
+
+    assert is_empty(not_empty_df) is False

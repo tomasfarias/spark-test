@@ -50,3 +50,7 @@ def create_dataframe(
         return df_rows
     else:
         return spark.createDataFrame(df_rows, schema=schema)
+
+
+def is_empty(df):
+    return df.take(1)[0] == Row()
