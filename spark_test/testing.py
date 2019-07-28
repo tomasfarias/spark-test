@@ -88,7 +88,8 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'On row {idx}. {e}').with_traceback(e.__traceback__)
+                e.args = (f'On row {idx}.' + e.args[0], )
+                raise
 
     else:
         expected_count = Counter(expected_rows)
@@ -102,7 +103,8 @@ def assert_dataframe_equal(
             try:
                 assert_row_equal(left_row, right_row)
             except AssertionError as e:
-                raise AssertionError(f'On row {idx}. {e}').with_traceback(e.__traceback__)
+                e.args = (f'On row {idx}.' + e.args[0], )
+                raise
 
             msg = (
                 '{left_row} appears a different amount of times:\n'
