@@ -93,8 +93,8 @@ def assert_dataframe_equal(
                 raise
 
     else:
-        expected_count = Counter(expected_rows)  # type: typing.Counter[str, int]
-        result_count = Counter(result_rows)  # type: typing.Counter[str, int]
+        expected_count = Counter(expected_rows)  # type: typing.Counter[str]
+        result_count = Counter(result_rows)  # type: typing.Counter[str]
 
         left_keys_sorted = sorted(expected_count.keys())
         right_keys_sorted = sorted(result_count.keys())
