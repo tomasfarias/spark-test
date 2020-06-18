@@ -1,0 +1,21 @@
+language: python
+matrix:
+  include:
+  - python: 3.6
+    env: TOXENV=py36
+  - python: 3.7
+    env: TOXENV=py37
+  - python: 3.8
+    env: TOXENV=mypy
+  - env: TOXENV=flake8
+install:
+- pip install tox
+script:
+- tox
+deploy:
+  provider: pypi
+  username: __token__
+  password:
+    secure: k46dewEGHN2rzH++rcKQBNkM9sRXxccJPxRWARNB9VabvppbZS/O76qt2LERIpZ2kxshY7EQv8BuD3jRiAqlkNci5X2epjXjQVbsMn8x6LNcdVK2aqtRyqA/NNWUt6zAVF6Yjx+xPwoop40DST7SsamIgVEjvBzm3hTcAC46XYHy5h23KT1YG+NkejgwyGyxWVoysHdi3rQrNAF5KgcpP3QPDcyZZId+BfOWxdLxisRdhnQj31S+mnIoljxKl8prBJVdNl4C2HtXM1prkSbqE/rzqIku7FGk5F5pWkGuE3uVr64GvxVf889cV1SmSoDGfLNKOs+ASq+yR72KVMOLIddb6rt7ePSNOMCz7fH8lZ1hVV4+mW8L6wEpL/r8YRFzI1R4mebJ1Jsij//JEb/NySS+uiHHjxc6XOUSzuek4LURuGhsDoV6WOJH1kR2GJr2HyFl3S66Ovuf5JkQAN5k4+kOX93YKMJS97gmhVN3CKA2Ef98eufq9yLYetoO5Rm+uFxqUMFBMc4k5FjZhRJF98XgxtrmOXWruI15VbeR8WwO8h7IwyQ05qg65i7IHJbT8KilvsyAAbmSSbSukRF1HNjscIIWxVT+JQGrwNEjk6UCKlB1zu3DcnU3qrpLwITIbVaLIaIaqbjFvzoqYNdmC3YvyQbaXMcrL2iCoyqS27I=
+  on:
+    tags: true

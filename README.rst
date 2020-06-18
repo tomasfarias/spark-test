@@ -1,10 +1,10 @@
-==========
 spark-test
 ==========
 
 A collection of assertion functions to test Spark Collections like DataFrames
 
----
+Motivation
+----------
 
 As you develop Spark applications, you can eventually end up writing methods that apply transformations over Spark DataFrames. In order to test the results, you can create ``pandas`` DataFrames and use the test functions provided by ``pandas`` as ``pyspark`` does not provide any functions to assist with testing.
 
