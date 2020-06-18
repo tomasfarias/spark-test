@@ -103,8 +103,8 @@ def test_assert_frame_equal(spark):
 
     new_schema = StructType(
         [
+            StructField('Name', StringType(), True),
             StructField('Age', ShortType(), True),
-            StructField('Name', StringType(), True)
         ]
     )
     result = create_dataframe(

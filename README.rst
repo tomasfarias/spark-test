@@ -1,6 +1,9 @@
 spark-test
 ==========
 
+.. image:: https://travis-ci.com/tomasfarias/spark-test.svg?branch=master
+    :target: https://travis-ci.com/tomasfarias/spark-test
+
 A collection of assertion functions to test Spark Collections like DataFrames
 
 Motivation
